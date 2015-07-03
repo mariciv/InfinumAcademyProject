@@ -1,6 +1,7 @@
 package co.infinum.appstate;
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
@@ -23,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
 
         if (getIntent() != null && getIntent().getExtras() != null && getIntent().getExtras().containsKey("USERNAME")) {
             username = getIntent().getStringExtra("USERNAME");
+        } else {
+            username = PreferenceManager.getDefaultSharedPreferences(this).getString("USERNAME", "");
         }
 
         usernameTextView.setText(username);

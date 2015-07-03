@@ -2,7 +2,7 @@ package co.infinum.appstate;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -60,6 +60,13 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        if (!PreferenceManager.getDefaultSharedPreferences(this).getString("USERNAME", "").isEmpty()) {
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+            return; // Not to show toast message
+        }
+
         // Inject views
         passwordEditText = (EditText) findViewById(R.id.password_edit_text);
         usernameEditText = (EditText) findViewById(R.id.username_edit_text);
@@ -85,6 +92,12 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if (remeberMe.isChecked()) {
+                    PreferenceManager.getDefaultSharedPreferences(LoginActivity.this).edit()
+                            .putString("USERNAME", usernameEditText.getText().toString()).apply();
+                }
+
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 intent.putExtra("USERNAME", usernameEditText.getText().toString());
                 startActivity(intent);
