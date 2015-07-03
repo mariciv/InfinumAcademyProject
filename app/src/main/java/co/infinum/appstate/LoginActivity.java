@@ -14,6 +14,10 @@ import android.widget.Toast;
 
 public class LoginActivity extends AppCompatActivity {
 
+    private static final String SHOW_COUNT = "SHOW COUNT";
+
+    private static final String WELCOME_VISIBILITY = "WELCOME VISIBILITY";
+
     private TextWatcher textChange = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -88,8 +92,26 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        if (savedInstanceState != null) {
+            showCount = savedInstanceState.getInt(SHOW_COUNT);
+            if (savedInstanceState.getBoolean(WELCOME_VISIBILITY, true)) {
+                welcomeLayout.setVisibility(View.VISIBLE);
+                loginLayout.setVisibility(View.GONE);
+            } else {
+                welcomeLayout.setVisibility(View.GONE);
+                loginLayout.setVisibility(View.VISIBLE);
+            }
+        }
+
         // Just for demonstration
         showCount++;
         Toast.makeText(this, "Login show count " + showCount, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(SHOW_COUNT, showCount);
+        outState.putBoolean(WELCOME_VISIBILITY, welcomeLayout.isShown());
     }
 }
