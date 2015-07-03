@@ -2,13 +2,19 @@ package co.infinum.appstate;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.io.File;
 
 /**
  * Created by Ivan on 02/07/15.
@@ -22,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
     private String username = "";
 
     private ImageView selfieImageView;
+
+    private Bitmap imageBitmap;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,23 +47,53 @@ public class MainActivity extends AppCompatActivity {
         }
         usernameTextView.setText(username);
 
+        decodeSelfieBitmap();
+        if (imageBitmap != null) {
+            selfieImageView.setImageBitmap(imageBitmap);
+        }
+
         selfieImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                File selfiePhoto = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+                String imageName = "selfie.jpg";
+                File image = new File(selfiePhoto, imageName);
+
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                    if (image != null) {
+                        Log.d("LOG", "File: " + image.getAbsolutePath());
+                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(image));
+                    }
                     startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
                 }
             }
         });
     }
 
+    private void decodeSelfieBitmap() {
+        String imagePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/selfie.jpg";
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+        options.inSampleSize = 8;
+        imageBitmap = BitmapFactory.decodeFile(imagePath, options);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            selfieImageView.setImageBitmap(imageBitmap);
+            if (data == null) {
+                decodeSelfieBitmap();
+            } else {
+                Bundle extras = data.getExtras();
+                imageBitmap = (Bitmap) extras.get("data");
+            }
+
+            if (imageBitmap != null) {
+                selfieImageView.setImageBitmap(imageBitmap);
+            }
+
         }
     }
 }
