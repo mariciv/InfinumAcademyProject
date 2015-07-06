@@ -9,8 +9,10 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -31,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
 
     private Bitmap imageBitmap;
 
+    private Button listExampleBtn;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
         //Inject views
         usernameTextView = (TextView) findViewById(R.id.username_text);
         selfieImageView = (ImageView) findViewById(R.id.selfie_image_view);
+        listExampleBtn = (Button) findViewById(R.id.list_example_btn);
 
         if (getIntent() != null && getIntent().getExtras() != null && getIntent().getExtras().containsKey("USERNAME")) {
             username = getIntent().getStringExtra("USERNAME");
@@ -68,6 +73,14 @@ public class MainActivity extends AppCompatActivity {
                     }
                     startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
                 }
+
+            }
+        });
+
+        listExampleBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, RecycleActivity.class));
             }
         });
     }

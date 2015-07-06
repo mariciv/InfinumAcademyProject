@@ -24,6 +24,10 @@
 
         <activity android:name=".MainActivity"
                   android:label="@string/app_name"/>
+
+        <activity android:name=".ListActivity"/>
+
+        <activity android:name=".RecycleActivity"/>
     </application>
 
 </manifest>
