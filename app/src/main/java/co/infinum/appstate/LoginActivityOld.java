@@ -12,7 +12,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivityOld extends AppCompatActivity {
 
     private static final String SHOW_COUNT = "SHOW COUNT";
 
@@ -61,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         if (!PreferenceManager.getDefaultSharedPreferences(this).getString("USERNAME", "").isEmpty()) {
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            Intent intent = new Intent(LoginActivityOld.this, MainActivityOld.class);
             startActivity(intent);
             finish();
             return; // Not to show toast message
@@ -94,11 +94,11 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 if (remeberMe.isChecked()) {
-                    PreferenceManager.getDefaultSharedPreferences(LoginActivity.this).edit()
+                    PreferenceManager.getDefaultSharedPreferences(LoginActivityOld.this).edit()
                             .putString("USERNAME", usernameEditText.getText().toString()).apply();
                 }
 
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                Intent intent = new Intent(LoginActivityOld.this, MainActivityOld.class);
                 intent.putExtra("USERNAME", usernameEditText.getText().toString());
                 startActivity(intent);
                 finish();

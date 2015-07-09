@@ -5,37 +5,10 @@
               android:layout_height="match_parent"
               android:gravity="center_horizontal">
 
-    <TextView android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:textColor="@android:color/black"
-              android:textSize="32sp"
-              android:padding="10dp"
-              android:gravity="center"
-              android:text="Welcome"/>
-
-    <TextView
-            android:id="@+id/username_text"
+    <fragment
+            android:id="@+id/main_fragment"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/red"
-            android:textSize="22sp"
-            android:padding="10dp"
-            android:gravity="center"
-            android:text="Welcome"/>
-
-    <ImageView
-            android:id="@+id/selfie_image_view"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_margin="15dp"
-            android:scaleType="centerCrop"
-            android:background="@color/grey"
-            android:src="@android:drawable/ic_menu_camera"/>
-
-    <Button
-            android:id="@+id/list_example_btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="List example"/>
+            android:layout_height="match_parent"
+            class="co.infinum.appstate.fragments.MainFragment"/>
 
 </LinearLayout>

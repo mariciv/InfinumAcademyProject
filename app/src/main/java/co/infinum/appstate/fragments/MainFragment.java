@@ -1,5 +1,6 @@
-package co.infinum.appstate;
+package co.infinum.appstate.fragments;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,20 +9,24 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
+import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.File;
 
+import co.infinum.appstate.R;
+import co.infinum.appstate.RecycleActivity;
+
 /**
- * Created by Ivan on 02/07/15.
+ * Created by Ivan on 09/07/15.
  */
-public class MainActivity extends AppCompatActivity {
+public class MainFragment extends Fragment {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1010;
 
@@ -35,21 +40,23 @@ public class MainActivity extends AppCompatActivity {
 
     private Button listExampleBtn;
 
+    @Nullable
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_activity);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_main, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         //Inject views
-        usernameTextView = (TextView) findViewById(R.id.username_text);
-        selfieImageView = (ImageView) findViewById(R.id.selfie_image_view);
-        listExampleBtn = (Button) findViewById(R.id.list_example_btn);
+        usernameTextView = (TextView) view.findViewById(R.id.username_text);
+        selfieImageView = (ImageView) view.findViewById(R.id.selfie_image_view);
+        listExampleBtn = (Button) view.findViewById(R.id.list_example_btn);
 
-        if (getIntent() != null && getIntent().getExtras() != null && getIntent().getExtras().containsKey("USERNAME")) {
-            username = getIntent().getStringExtra("USERNAME");
-        } else {
-            username = PreferenceManager.getDefaultSharedPreferences(this).getString("USERNAME", "");
-        }
+        username = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("USERNAME", "");
+
         usernameTextView.setText(username);
 
         decodeSelfieBitmap();
@@ -66,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
                 File image = new File(selfiePhoto, imageName);
 
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
                     if (image != null) {
                         Log.d("LOG", "File: " + image.getAbsolutePath());
                         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(image));
@@ -80,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         listExampleBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, RecycleActivity.class));
+                startActivity(new Intent(getActivity(), RecycleActivity.class));
             }
         });
     }
@@ -93,9 +100,10 @@ public class MainActivity extends AppCompatActivity {
         imageBitmap = BitmapFactory.decodeFile(imagePath, options);
     }
 
+
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == getActivity().RESULT_OK) {
             if (data == null) {
                 decodeSelfieBitmap();
             } else {
@@ -106,7 +114,6 @@ public class MainActivity extends AppCompatActivity {
             if (imageBitmap != null) {
                 selfieImageView.setImageBitmap(imageBitmap);
             }
-
         }
     }
 }
